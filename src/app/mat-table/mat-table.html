@@ -1,0 +1,51 @@
+<cdk-virtual-scroll-viewport #viewPort [itemSize]="ITEM_SIZE" matSort style="height: 90%">
+  <mat-table #table [dataSource]="dataSource" multiTemplateDataRows>
+    <!-- Id -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header [style.top.px]="offset">Id</mat-header-cell>
+      <mat-cell *matCellDef="let user">{{ user.id }}</mat-cell>
+    </ng-container>
+
+    <!-- Name -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header [style.top.px]="offset">Name</mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        {{ user.lastName }}, {{ user.firstName }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Email -->
+   <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef mat-sort-header [style.top.px]="offset">Email</mat-header-cell>
+      <mat-cell *matCellDef="let user">{{ user.email }}</mat-cell>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column -->
+    <ng-container matColumnDef="expandedDetail">
+      <mat-cell *matCellDef="let element" [attr.colspan]="visibleColumns.length"> 
+        <pre>{{element | json}}</pre>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="visibleColumns; sticky: true" [style.top.px]="offset"></mat-header-row>
+    <!-- <mat-row *matRowDef="let row; columns: visibleColumns"></mat-row> -->
+    <!-- <mat-row *matRowDef="let element; columns: visibleColumns;"
+            [class.expanded]="expandedElement === element"
+            (click)="toggle(element)"></mat-row> -->
+
+    <mat-row *matRowDef="let row; columns: visibleColumns;"
+            [class.expanded]="isExpanded(row)"
+            (click)="toggle(row)"></mat-row>
+    <mat-row *matRowDef="let row; columns: ['expandedDetail']"
+            [@detailExpand]="isExpanded(row) ? 'expanded' : 'collapsed'"
+            style="overflow: hidden"></mat-row>
+
+    <!-- <mat-row *matRowDef="let row; columns: visibleColumns;"
+            [class.expanded]="expandedElement === row"
+            (click)="toggle(row)"></mat-row>
+    <mat-row *matRowDef="let row; columns: ['expandedDetail']"
+            [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'"
+            style="overflow: hidden"></mat-row> -->
+  </mat-table>
+</cdk-virtual-scroll-viewport>
+<button (click)=scrollToPage()>go to page</button>
